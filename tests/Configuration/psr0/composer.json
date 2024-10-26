@@ -1,0 +1,12 @@
+{
+    "autoload": {
+        "psr-0": {
+            "Psr0\\Config\\": ""
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Psr0\\Config\\Tests\\": ""
+        }
+    }
+}

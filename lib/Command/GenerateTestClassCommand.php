@@ -9,6 +9,7 @@ use JWage\PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
 use JWage\PHPUnitTestGenerator\Configuration\ComposerConfigurationReader;
 use JWage\PHPUnitTestGenerator\Configuration\Configuration;
 use JWage\PHPUnitTestGenerator\TestClassGenerator;
+use JWage\PHPUnitTestGenerator\Writer\Psr0TestClassWriter;
 use JWage\PHPUnitTestGenerator\Writer\Psr4TestClassWriter;
 use JWage\PHPUnitTestGenerator\Writer\TestClassWriter;
 use Override;
@@ -29,7 +30,7 @@ final class GenerateTestClassCommand extends Command
     }
 
     #[Override]
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $className = $input->getArgument('class');
 
@@ -56,6 +57,8 @@ final class GenerateTestClassCommand extends Command
             ->write($generatedTestClass);
 
         $output->writeln(\sprintf('Test class written to <info>%s</info>', $writePath));
+
+        return self::SUCCESS;
     }
 
     private function getClassName(string $className): string
@@ -98,6 +101,10 @@ final class GenerateTestClassCommand extends Command
 
         if ($autoloadingStrategy === AutoloadingStrategy::PSR4) {
             return new Psr4TestClassWriter($configuration);
+        }
+
+        if ($autoloadingStrategy === AutoloadingStrategy::PSR0) {
+            return new Psr0TestClassWriter($configuration);
         }
 
         throw new InvalidArgumentException(

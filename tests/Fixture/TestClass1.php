@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests;
+namespace JWage\PHPUnitTestGenerator\Tests\Fixture;
+
+use JWage\PHPUnitTestGenerator\Tests\TestDependency;
 
 class TestClass1
 {

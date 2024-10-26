@@ -6,7 +6,13 @@ namespace JWage\PHPUnitTestGenerator\Configuration;
 
 final readonly class Configuration
 {
-    public function __construct(private string $autoloadingStrategy, private string $sourceNamespace, private string $sourceDir, private string $testsNamespace, private string $testsDir) {}
+    public function __construct(
+        private string $autoloadingStrategy,
+        private string $sourceNamespace,
+        private string $sourceDir,
+        private string $testsNamespace,
+        private string $testsDir,
+    ) {}
 
     public function getAutoloadingStrategy(): string
     {

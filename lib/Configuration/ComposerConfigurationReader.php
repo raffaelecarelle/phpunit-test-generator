@@ -8,9 +8,12 @@ use RuntimeException;
 
 final class ComposerConfigurationReader
 {
+    private string $projectRoot;
+
     public function createConfiguration(?string $path = null): Configuration
     {
-        $path ??= \getcwd();
+        $this->projectRoot = $path ?? \getcwd();
+
         $composerJsonPath = $path . '/composer.json';
 
         if ( ! \file_exists($composerJsonPath)) {
@@ -33,7 +36,11 @@ final class ComposerConfigurationReader
             return $this->getPsr4Configuration($composerJsonData);
         }
 
-        throw new RuntimeException('Only psr4 is currently supported. Pull Requests accepted to support other autoloading standards.');
+        if ($this->isPsr0($composerJsonData)) {
+            return $this->getPsr0Configuration($composerJsonData);
+        }
+
+        throw new RuntimeException('Only psr4 and psr0 is currently supported. Pull Requests accepted to support other autoloading standards.');
     }
 
     /**
@@ -56,10 +63,36 @@ final class ComposerConfigurationReader
     /**
      * @param mixed[] $composerJsonData
      */
+    private function getPsr0Configuration(array $composerJsonData): Configuration
+    {
+        [$sourceNamespace, $sourceDir] = $this->getPsr0Source($composerJsonData);
+        [$testsNamespace, $testsDir] = $this->getPsr0Tests($composerJsonData);
+
+        return (new ConfigurationBuilder())
+            ->setAutoloadingStrategy(AutoloadingStrategy::PSR0)
+            ->setSourceNamespace(\rtrim($sourceNamespace, '\\'))
+            ->setSourceDir(\rtrim($sourceDir, '/'))
+            ->setTestsNamespace(\rtrim($testsNamespace, '\\'))
+            ->setTestsDir(\rtrim($testsDir, '/'))
+            ->build();
+    }
+
+    /**
+     * @param mixed[] $composerJsonData
+     */
     private function isPsr4(array $composerJsonData): bool
     {
         return isset($composerJsonData['autoload']['psr-4'])
             && isset($composerJsonData['autoload-dev']['psr-4']);
+    }
+
+    /**
+     * @param mixed[] $composerJsonData
+     */
+    private function isPsr0(array $composerJsonData): bool
+    {
+        return isset($composerJsonData['autoload']['psr-0'])
+            && isset($composerJsonData['autoload-dev']['psr-0']);
     }
 
     /**
@@ -77,9 +110,29 @@ final class ComposerConfigurationReader
      *
      * @return string[]
      */
+    private function getPsr0Source(array $composerJsonData): array
+    {
+        return $this->getNamespaceSourcePair($composerJsonData['autoload']['psr-0']);
+    }
+
+    /**
+     * @param mixed[] $composerJsonData
+     *
+     * @return string[]
+     */
     private function getPsr4Tests(array $composerJsonData): array
     {
         return $this->getNamespaceSourcePair($composerJsonData['autoload-dev']['psr-4']);
+    }
+
+    /**
+     * @param mixed[] $composerJsonData
+     *
+     * @return string[]
+     */
+    private function getPsr0Tests(array $composerJsonData): array
+    {
+        return $this->getNamespaceSourcePair($composerJsonData['autoload-dev']['psr-0']);
     }
 
     /**
@@ -92,7 +145,7 @@ final class ComposerConfigurationReader
         $sourceNamespace = \key($psr);
         \assert(\is_string($sourceNamespace));
 
-        $sourceDir = \getcwd() . '/' . $psr[$sourceNamespace];
+        $sourceDir = $this->projectRoot . '/' . $psr[$sourceNamespace];
 
         return [$sourceNamespace, $sourceDir];
     }

@@ -309,6 +309,9 @@ final class TestClassGenerator
         );
     }
 
+    /**
+     * @param class-string $className
+     */
     private function init(string $className): void
     {
         $this->reflectionClass = new ReflectionClass($className);

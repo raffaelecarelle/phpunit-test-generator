@@ -6,6 +6,8 @@ namespace JWage\PHPUnitTestGenerator\Tests;
 
 use JWage\PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
 use JWage\PHPUnitTestGenerator\TestClassGenerator;
+use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass1;
+use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass2;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -16,9 +18,9 @@ class TestClassGeneratorTest extends TestCase
 
         declare (strict_types=1);
 
-        namespace JWage\PHPUnitTestGenerator\Tests;
+        namespace JWage\PHPUnitTestGenerator\Tests\Fixture;
 
-        use JWage\PHPUnitTestGenerator\Tests\TestClass1;
+        use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass1;
         use JWage\PHPUnitTestGenerator\Tests\TestDependency;
         use PHPUnit\Framework\MockObject\MockObject;
         use PHPUnit\Framework\TestCase;
@@ -115,9 +117,9 @@ class TestClassGeneratorTest extends TestCase
 
         declare (strict_types=1);
 
-        namespace JWage\PHPUnitTestGenerator\Tests;
+        namespace JWage\PHPUnitTestGenerator\Tests\Fixture;
 
-        use JWage\PHPUnitTestGenerator\Tests\TestClass2;
+        use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass2;
         use PHPUnit\Framework\MockObject\MockObject;
         use PHPUnit\Framework\TestCase;
 

@@ -9,3 +9,6 @@ parameters:
         - %currentWorkingDirectory%/bin
         - %currentWorkingDirectory%/lib
         - %currentWorkingDirectory%/tests
+    excludePaths:
+    	  analyseAndScan:
+    	    - %currentWorkingDirectory%/tests/Fixture/*
