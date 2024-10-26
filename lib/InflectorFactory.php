@@ -9,17 +9,17 @@ use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\Rules\English\Rules;
 use Doctrine\Inflector\RulesetInflector;
 
-class InflectorFactory
+final class InflectorFactory
 {
-    public static function createEnglishInflector() : Inflector
+    public static function createEnglishInflector(): Inflector
     {
         return new Inflector(
             new CachedWordInflector(new RulesetInflector(
-                Rules::getSingularRuleset()
+                Rules::getSingularRuleset(),
             )),
             new CachedWordInflector(new RulesetInflector(
-                Rules::getPluralRuleset()
-            ))
+                Rules::getPluralRuleset(),
+            )),
         );
     }
 }

@@ -9,6 +9,7 @@ use JWage\PHPUnitTestGenerator\Configuration\Configuration;
 use JWage\PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
 use JWage\PHPUnitTestGenerator\GeneratedTestClass;
 use JWage\PHPUnitTestGenerator\Writer\Psr4TestClassWriter;
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -16,38 +17,42 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class Psr4TestClassWriterTest extends TestCase
 {
-    /** @var Configuration */
-    private $configuration;
+    private Configuration $configuration;
 
-    /** @var Filesystem|MockObject */
-    private $filesystem;
+    /**
+     * @var Filesystem|MockObject
+     */
+    private MockObject $filesystem;
 
-    /** @var Psr4TestClassWriter */
-    private $psr4TestClassWriter;
+    private Psr4TestClassWriter $psr4TestClassWriter;
 
-    public function testWrite() : void
+    public function testWrite(): void
     {
         $generatedTestClass = new GeneratedTestClass(
             'App\User',
             'App\Tests\UserTest',
-            '<?php echo "Hello World";'
+            '<?php echo "Hello World";',
         );
 
-        $this->filesystem->expects(self::at(0))
+        $matcher = self::exactly(2);
+        $this->filesystem->expects($matcher)
             ->method('exists')
-            ->with('/data/tests')
-            ->willReturn(false);
+            ->willReturnCallback(function (...$parameters) use ($matcher): void {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertEquals(['/data/tests'], $parameters);
+                }
+
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertEquals(['/data/tests/UserTest.php'], $parameters);
+                }
+            })->willReturnOnConsecutiveCalls(false, false)
+        ;
 
         $this->filesystem->expects(self::once())
             ->method('mkdir')
             ->with('/data/tests');
 
-        $this->filesystem->expects(self::at(2))
-            ->method('exists')
-            ->with('/data/tests/UserTest.php')
-            ->willReturn(false);
-
-        $this->filesystem->expects(self::at(3))
+        $this->filesystem->expects(self::once())
             ->method('dumpFile')
             ->with('/data/tests/UserTest.php', '<?php echo "Hello World";');
 
@@ -56,28 +61,31 @@ class Psr4TestClassWriterTest extends TestCase
         self::assertSame('/data/tests/UserTest.php', $writePath);
     }
 
-
-    public function testWriteTestClassAlreadyExists() : void
+    public function testWriteTestClassAlreadyExists(): void
     {
         $generatedTestClass = new GeneratedTestClass(
             'App\User',
             'App\Tests\UserTest',
-            '<?php echo "Hello World";'
+            '<?php echo "Hello World";',
         );
 
-        $this->filesystem->expects(self::at(0))
+        $matcher = self::exactly(2);
+        $this->filesystem->expects($matcher)
             ->method('exists')
-            ->with('/data/tests')
-            ->willReturn(false);
+            ->willReturnCallback(function (...$parameters) use ($matcher): void {
+                if ($matcher->numberOfInvocations() === 1) {
+                    self::assertEquals(['/data/tests'], $parameters);
+                }
+
+                if ($matcher->numberOfInvocations() === 2) {
+                    self::assertEquals(['/data/tests/UserTest.php'], $parameters);
+                }
+            })->willReturnOnConsecutiveCalls(false, true)
+        ;
 
         $this->filesystem->expects(self::once())
             ->method('mkdir')
             ->with('/data/tests');
-
-        $this->filesystem->expects(self::at(2))
-            ->method('exists')
-            ->with('/data/tests/UserTest.php')
-            ->willReturn(true);
 
         $this->filesystem->expects(self::never())
             ->method('dumpFile');
@@ -88,7 +96,8 @@ class Psr4TestClassWriterTest extends TestCase
         $this->psr4TestClassWriter->write($generatedTestClass);
     }
 
-    protected function setUp() : void
+    #[Override]
+    protected function setUp(): void
     {
         $this->configuration = (new ConfigurationBuilder())
             ->setAutoloadingStrategy(AutoloadingStrategy::PSR4)
@@ -102,7 +111,7 @@ class Psr4TestClassWriterTest extends TestCase
 
         $this->psr4TestClassWriter = new Psr4TestClassWriter(
             $this->configuration,
-            $this->filesystem
+            $this->filesystem,
         );
     }
 }

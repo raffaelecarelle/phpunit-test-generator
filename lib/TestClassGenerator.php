@@ -10,55 +10,46 @@ use PhpParser\Builder\Class_;
 use PhpParser\Builder\Method;
 use PhpParser\BuilderFactory;
 use PhpParser\Node;
-use PhpParser\PrettyPrinter;
+use PhpParser\Node\Expr\Assign;
+use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\Declare_;
+use PhpParser\Node\Stmt\DeclareDeclare;
+use PhpParser\Node\Stmt\Nop;
+use PhpParser\PrettyPrinter\Standard;
 use ReflectionClass;
-use function array_map;
-use function class_exists;
-use function implode;
-use function sprintf;
-use function str_replace;
 
-class TestClassGenerator
+final class TestClassGenerator
 {
-    /** @var Configuration */
-    private $configuration;
+    private readonly Inflector $inflector;
 
-    /** @var Inflector */
-    private $inflector;
+    private readonly BuilderFactory $builderFactory;
 
-    /** @var BuilderFactory */
-    private $builderFactory;
+    private ?ReflectionClass $reflectionClass = null;
 
-    /** @var ReflectionClass */
-    private $reflectionClass;
+    private ?string $classShortName = null;
 
-    /** @var string */
-    private $classShortName;
+    private null | array | string $testNamespace = null;
 
-    /** @var string */
-    private $testNamespace;
+    private ?string $testClassShortName = null;
 
-    /** @var string */
-    private $testClassShortName;
-
-    /** @var string */
-    private $testClassName;
+    private ?string $testClassName = null;
 
     public function __construct(
-        Configuration $configuration,
-        ?Inflector $inflector = null
+        private readonly Configuration $configuration,
+        ?Inflector $inflector = null,
     ) {
-        $this->configuration  = $configuration;
-        $this->inflector      = $inflector ?? InflectorFactory::createEnglishInflector();
+        $this->inflector = $inflector ?? InflectorFactory::createEnglishInflector();
         $this->builderFactory = new BuilderFactory();
     }
 
-    public function generate(string $className) : GeneratedTestClass
+    public function generate(string $className): GeneratedTestClass
     {
         $this->init($className);
 
         $testClassMetadata = (new TestClassMetadataParser(
-            $this->inflector
+            $this->inflector,
         ))->getTestClassMetadata($className);
 
         $code = $this->generateTestClass($testClassMetadata);
@@ -68,42 +59,42 @@ class TestClassGenerator
         return new GeneratedTestClass(
             $className,
             $this->testClassName,
-            $code
+            $code,
         );
     }
 
-    private function replaceWithNewLines(string $code) : string
+    private function replaceWithNewLines(string $code): string
     {
-        $code = str_replace('    private $__newLineReplace__;', '', $code);
+        $code = \str_replace('    private $__newLineReplace__;', '', $code);
 
-        $code = str_replace(<<<CODE
-    function __newLineReplace__()
-    {
-    }
-CODE
-        , '', $code);
+        $code = \str_replace(<<<CODE
+                function __newLineReplace__()
+                {
+                }
+            CODE
+            , '', $code);
 
         return $code . "\n";
     }
 
-    private function generateTestClass(TestClassMetadata $testClassMetadata) : string
+    private function generateTestClass(TestClassMetadata $testClassMetadata): string
     {
         $nodes = $this->generateTestClassNodes($testClassMetadata);
 
-        return (new PrettyPrinter\Standard())
+        return (new Standard())
             ->prettyPrintFile($nodes);
     }
 
     /**
      * @return Node[]
      */
-    private function generateTestClassNodes(TestClassMetadata $testClassMetadata) : array
+    private function generateTestClassNodes(TestClassMetadata $testClassMetadata): array
     {
         $nodes = [];
 
-        $nodes[] = new Node\Stmt\Declare_([new Node\Stmt\DeclareDeclare('strict_types', $this->builderFactory->val(1))]);
+        $nodes[] = new Declare_([new DeclareDeclare('strict_types', $this->builderFactory->val(1))]);
 
-        $nodes[] = new Node\Stmt\Nop();
+        $nodes[] = new Nop();
 
         $namespaceBuilder = $this->builderFactory->namespace($this->testNamespace);
 
@@ -111,7 +102,7 @@ CODE
             $namespaceBuilder->addStmt($this->builderFactory->use($useStatement));
         }
 
-        $namespaceBuilder->addStmt(new Node\Stmt\Nop());
+        $namespaceBuilder->addStmt(new Nop());
 
         $classBuilder = $this->builderFactory->class($this->testClassShortName)
             ->extend('TestCase');
@@ -129,18 +120,18 @@ CODE
 
     private function generateTestClassProperties(
         TestClassMetadata $testClassMetadata,
-        Class_ $classBuilder
-    ) : void {
+        Class_ $classBuilder,
+    ): void {
         foreach ($testClassMetadata->getProperties() as $property) {
             $classBuilder->addStmt(
                 $this->builderFactory->property($property['propertyName'])
                     ->makePrivate()
-                    ->setDocComment($this->generatePropertyDocBlock($property))
+                    ->setDocComment($this->generatePropertyDocBlock($property)),
             );
 
             $classBuilder->addStmt(
                 $this->builderFactory->property('__newLineReplace__')
-                    ->makePrivate()
+                    ->makePrivate(),
             );
         }
     }
@@ -148,7 +139,7 @@ CODE
     /**
      * @param string[] $property
      */
-    private function generatePropertyDocBlock(array $property) : string
+    private function generatePropertyDocBlock(array $property): string
     {
         $docBlockTypes = [$property['propertyType']];
 
@@ -156,13 +147,13 @@ CODE
             $docBlockTypes[] = 'MockObject';
         }
 
-        return sprintf('/** @var %s */', implode('|', $docBlockTypes));
+        return \sprintf('/** @var %s */', \implode('|', $docBlockTypes));
     }
 
     private function generateTestClassTestMethods(
         TestClassMetadata $testClassMetadata,
-        Class_ $classBuilder
-    ) : void {
+        Class_ $classBuilder,
+    ): void {
         foreach ($testClassMetadata->getTestMethods() as $testMethod) {
             $methodBuilder = $this->builderFactory->method($testMethod['methodName'])
                 ->makePublic()
@@ -181,32 +172,30 @@ CODE
     /**
      * @param mixed[] $line
      */
-    private function generateTestClassMethodLine(Method $methodBuilder, array $line) : void
+    private function generateTestClassMethodLine(Method $methodBuilder, array $line): void
     {
         switch ($line['type']) {
             case TestClassMetadataParser::DEPENDENCY:
-                $methodBuilder->addStmt(new Node\Expr\Assign(
+                $methodBuilder->addStmt(new Assign(
                     $this->builderFactory->var($line['variableName']),
-                    $this->createMockMethodCall($line['variableType'])
+                    $this->createMockMethodCall($line['variableType']),
                 ));
 
                 break;
 
             case TestClassMetadataParser::NORMAL:
-                $methodBuilder->addStmt(new Node\Expr\Assign(
+                $methodBuilder->addStmt(new Assign(
                     $this->builderFactory->var($line['variableName']),
-                    $this->builderFactory->val('')
+                    $this->builderFactory->val(''),
                 ));
 
                 break;
 
             case TestClassMetadataParser::SUT:
-                $arguments = $this->builderFactory->args(array_map(function (string $parameter) {
-                    return $this->builderFactory->var($parameter);
-                }, $line['arguments']));
+                $arguments = $this->builderFactory->args(\array_map(fn(string $parameter): Variable => $this->builderFactory->var($parameter), $line['arguments']));
 
                 $assertArguments = [];
-                $assertMethod    = 'assertNull';
+                $assertMethod = 'assertNull';
 
                 switch ($line['methodReturnType']) {
                     case 'null':
@@ -214,17 +203,17 @@ CODE
                         break;
 
                     case 'string':
-                        $assertMethod      = 'assertSame';
+                        $assertMethod = 'assertSame';
                         $assertArguments[] = '';
                         break;
 
                     case 'int':
-                        $assertMethod      = 'assertSame';
+                        $assertMethod = 'assertSame';
                         $assertArguments[] = 1;
                         break;
 
                     case 'float':
-                        $assertMethod      = 'assertSame';
+                        $assertMethod = 'assertSame';
                         $assertArguments[] = 1.0;
                         break;
 
@@ -233,18 +222,18 @@ CODE
                         break;
 
                     case 'array':
-                        $assertMethod      = 'assertSame';
+                        $assertMethod = 'assertSame';
                         $assertArguments[] = [];
                         break;
 
                     default:
-                        if (class_exists($line['methodReturnType'])) {
+                        if (\class_exists($line['methodReturnType'])) {
                             $reflectionClass = new ReflectionClass($line['methodReturnType']);
 
-                            $assertMethod      = 'assertInstanceOf';
+                            $assertMethod = 'assertInstanceOf';
                             $assertArguments[] = $this->builderFactory->classConstFetch(
                                 $reflectionClass->getShortName(),
-                                'class'
+                                'class',
                             );
                         }
                 }
@@ -252,15 +241,15 @@ CODE
                 $assertArguments[] = $this->builderFactory->methodCall(
                     $this->builderFactory->var('this->' . $line['variableName']),
                     $line['methodName'],
-                    $arguments
+                    $arguments,
                 );
 
                 $methodBuilder->addStmt(
                     $this->builderFactory->staticCall(
                         'self',
                         $assertMethod,
-                        $assertArguments
-                    )
+                        $assertArguments,
+                    ),
                 );
 
                 break;
@@ -269,8 +258,8 @@ CODE
 
     private function generateTestClassSetUpMethod(
         TestClassMetadata $testClassMetadata,
-        Class_ $classBuilder
-    ) : void {
+        Class_ $classBuilder,
+    ): void {
         $methodBuilder = $this->builderFactory->method('setUp')
             ->makeProtected()
             ->setReturnType('void');
@@ -278,32 +267,30 @@ CODE
         foreach ($testClassMetadata->getSetUpDependencies() as $setUpDependency) {
             switch ($setUpDependency['type']) {
                 case TestClassMetadataParser::DEPENDENCY:
-                    $methodBuilder->addStmt(new Node\Expr\Assign(
+                    $methodBuilder->addStmt(new Assign(
                         $this->builderFactory->var('this->' . $setUpDependency['propertyName']),
-                        $this->createMockMethodCall($setUpDependency['propertyType'])
+                        $this->createMockMethodCall($setUpDependency['propertyType']),
                     ));
 
                     break;
 
                 case TestClassMetadataParser::NORMAL:
-                    $methodBuilder->addStmt(new Node\Expr\Assign(
+                    $methodBuilder->addStmt(new Assign(
                         $this->builderFactory->var('this->' . $setUpDependency['propertyName']),
-                        $this->builderFactory->val($setUpDependency['propertyValue'])
+                        $this->builderFactory->val($setUpDependency['propertyValue']),
                     ));
 
                     break;
 
                 case TestClassMetadataParser::SUT:
-                    $arguments = array_map(function (string $argument) {
-                        return $this->builderFactory->var('this->' . $argument);
-                    }, $setUpDependency['arguments']);
+                    $arguments = \array_map(fn(string $argument): Variable => $this->builderFactory->var('this->' . $argument), $setUpDependency['arguments']);
 
-                    $methodBuilder->addStmt(new Node\Expr\Assign(
+                    $methodBuilder->addStmt(new Assign(
                         $this->builderFactory->var('this->' . $setUpDependency['propertyName']),
                         $this->builderFactory->new(
-                            new Node\Name($setUpDependency['propertyType']),
-                            $arguments
-                        )
+                            new Name($setUpDependency['propertyType']),
+                            $arguments,
+                        ),
                     ));
 
                     break;
@@ -313,26 +300,26 @@ CODE
         $classBuilder->addStmt($methodBuilder);
     }
 
-    private function createMockMethodCall(string $className) : Node\Expr\MethodCall
+    private function createMockMethodCall(string $className): MethodCall
     {
         return $this->builderFactory->methodCall(
             $this->builderFactory->var('this'),
             'createMock',
-            [$this->builderFactory->classConstFetch($className, 'class')]
+            [$this->builderFactory->classConstFetch($className, 'class')],
         );
     }
 
-    private function init(string $className) : void
+    private function init(string $className): void
     {
         $this->reflectionClass = new ReflectionClass($className);
 
-        $this->classShortName     = $this->reflectionClass->getShortName();
-        $this->testNamespace      = str_replace(
+        $this->classShortName = $this->reflectionClass->getShortName();
+        $this->testNamespace = \str_replace(
             $this->configuration->getSourceNamespace(),
             $this->configuration->getTestsNamespace(),
-            $this->reflectionClass->getNamespaceName()
+            $this->reflectionClass->getNamespaceName(),
         );
         $this->testClassShortName = $this->classShortName . 'Test';
-        $this->testClassName      = $this->testNamespace . '\\' . $this->testClassShortName;
+        $this->testClassName = $this->testNamespace . '\\' . $this->testClassShortName;
     }
 }

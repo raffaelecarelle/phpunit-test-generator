@@ -4,66 +4,61 @@ declare(strict_types=1);
 
 namespace JWage\PHPUnitTestGenerator\Configuration;
 
-class ConfigurationBuilder
+final class ConfigurationBuilder
 {
-    /** @var string */
-    private $autoloadingStrategy = '';
+    private string $autoloadingStrategy = '';
 
-    /** @var string */
-    private $sourceNamespace = '';
+    private string $sourceNamespace = '';
 
-    /** @var string */
-    private $sourceDir = '';
+    private string $sourceDir = '';
 
-    /** @var string */
-    private $testsNamespace = '';
+    private string $testsNamespace = '';
 
-    /** @var string */
-    private $testsDir = '';
+    private string $testsDir = '';
 
-    public function setAutoloadingStrategy(string $autoloadingStrategy) : self
+    public function setAutoloadingStrategy(string $autoloadingStrategy): self
     {
         $this->autoloadingStrategy = $autoloadingStrategy;
 
         return $this;
     }
 
-    public function setSourceNamespace(string $sourceNamespace) : self
+    public function setSourceNamespace(string $sourceNamespace): self
     {
         $this->sourceNamespace = $sourceNamespace;
 
         return $this;
     }
 
-    public function setSourceDir(string $sourceDir) : self
+    public function setSourceDir(string $sourceDir): self
     {
         $this->sourceDir = $sourceDir;
 
         return $this;
     }
 
-    public function setTestsNamespace(string $testsNamespace) : self
+    public function setTestsNamespace(string $testsNamespace): self
     {
         $this->testsNamespace = $testsNamespace;
 
         return $this;
     }
 
-    public function setTestsDir(string $testsDir) : self
+    public function setTestsDir(string $testsDir): self
     {
         $this->testsDir = $testsDir;
 
         return $this;
     }
 
-    public function build() : Configuration
+    public function build(): Configuration
     {
         return new Configuration(
             $this->autoloadingStrategy,
             $this->sourceNamespace,
             $this->sourceDir,
             $this->testsNamespace,
-            $this->testsDir
+            $this->testsDir,
         );
     }
 }

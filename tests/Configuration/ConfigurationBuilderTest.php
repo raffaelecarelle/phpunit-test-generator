@@ -6,14 +6,14 @@ namespace JWage\PHPUnitTestGenerator\Tests\Configuration;
 
 use JWage\PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
 use JWage\PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationBuilderTest extends TestCase
 {
-    /** @var ConfigurationBuilder */
-    private $configurationBuilder;
+    private ConfigurationBuilder $configurationBuilder;
 
-    public function testSetAutoloadingStrategy() : void
+    public function testSetAutoloadingStrategy(): void
     {
         $autoloadingStrategy = AutoloadingStrategy::PSR4;
 
@@ -24,7 +24,7 @@ class ConfigurationBuilderTest extends TestCase
         self::assertSame($autoloadingStrategy, $configuration->getAutoloadingStrategy());
     }
 
-    public function testSetSourceNamespace() : void
+    public function testSetSourceNamespace(): void
     {
         $sourceNamespace = 'App';
 
@@ -35,7 +35,7 @@ class ConfigurationBuilderTest extends TestCase
         self::assertSame($sourceNamespace, $configuration->getSourceNamespace());
     }
 
-    public function testSetSourceDir() : void
+    public function testSetSourceDir(): void
     {
         $sourceDir = '/source/dir';
 
@@ -46,7 +46,7 @@ class ConfigurationBuilderTest extends TestCase
         self::assertSame($sourceDir, $configuration->getSourceDir());
     }
 
-    public function testSetTestsNamespace() : void
+    public function testSetTestsNamespace(): void
     {
         $testsNamespace = 'App\Tests';
 
@@ -57,7 +57,7 @@ class ConfigurationBuilderTest extends TestCase
         self::assertSame($testsNamespace, $configuration->getTestsNamespace());
     }
 
-    public function testSetTestsDir() : void
+    public function testSetTestsDir(): void
     {
         $testsDir = '/tests/dir';
 
@@ -68,7 +68,8 @@ class ConfigurationBuilderTest extends TestCase
         self::assertSame($testsDir, $configuration->getTestsDir());
     }
 
-    protected function setUp() : void
+    #[Override]
+    protected function setUp(): void
     {
         $this->configurationBuilder = new ConfigurationBuilder();
     }

@@ -4,35 +4,21 @@ declare(strict_types=1);
 
 namespace JWage\PHPUnitTestGenerator;
 
-class GeneratedTestClass
+final readonly class GeneratedTestClass
 {
-    /** @var string */
-    private $className;
+    public function __construct(private string $className, private string $testClassName, private string $code) {}
 
-    /** @var string */
-    private $testClassName;
-
-    /** @var string */
-    private $code;
-
-    public function __construct(string $className, string $testClassName, string $code)
-    {
-        $this->className     = $className;
-        $this->testClassName = $testClassName;
-        $this->code          = $code;
-    }
-
-    public function getClassName() : string
+    public function getClassName(): string
     {
         return $this->className;
     }
 
-    public function getTestClassName() : string
+    public function getTestClassName(): string
     {
         return $this->testClassName;
     }
 
-    public function getCode() : string
+    public function getCode(): string
     {
         return $this->code;
     }

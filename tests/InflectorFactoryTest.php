@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 
 namespace JWage\PHPUnitTestGenerator\Tests;
 
@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class InflectorFactoryTest extends TestCase
 {
-    public function testCreateEnglishInflector() : void
+    public function testCreateEnglishInflector(): void
     {
         $inflector = InflectorFactory::createEnglishInflector();
 

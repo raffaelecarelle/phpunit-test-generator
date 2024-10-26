@@ -6,7 +6,5 @@ namespace JWage\PHPUnitTestGenerator\Tests;
 
 class TestClass2
 {
-    public function getSomething() : string
-    {
-    }
+    public function getSomething(): string {}
 }

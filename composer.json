@@ -10,19 +10,21 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "doctrine/inflector": "2.0.x-dev",
-        "nikic/php-parser": "^4.1",
-        "symfony/console": "^4.1",
-        "symfony/filesystem": "^4.2"
+        "php": "^8.3",
+        "doctrine/inflector": "2.1.x-dev",
+        "nikic/php-parser": "^v5.3.1",
+        "symfony/console": "^v7.1.5",
+        "symfony/filesystem": "^v7.1.5"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^5.0",
-        "phpstan/phpstan": "^0.10",
-        "phpstan/phpstan-deprecation-rules": "^0.10",
-        "phpstan/phpstan-phpunit": "^0.10",
-        "phpstan/phpstan-strict-rules": "^0.10",
-        "phpunit/phpunit": "^7.4"
+        "doctrine/coding-standard": "^12.0.0",
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "phpstan/phpstan": "^1.12.7",
+        "phpstan/phpstan-deprecation-rules": "^1.2.1",
+        "phpstan/phpstan-phpunit": "^1.4.0",
+        "phpstan/phpstan-strict-rules": "^1.6.1",
+        "phpunit/phpunit": "^11.4.2",
+        "rector/rector": "^1.2"
     },
     "autoload": {
         "psr-4": {
@@ -35,7 +37,10 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "extra": {
         "branch-alias": {

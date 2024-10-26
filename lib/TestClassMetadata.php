@@ -4,42 +4,20 @@ declare(strict_types=1);
 
 namespace JWage\PHPUnitTestGenerator;
 
-class TestClassMetadata
+final readonly class TestClassMetadata
 {
-    /** @var mixed[] */
-    private $useStatements;
-
-    /** @var mixed[] */
-    private $properties;
-
-    /** @var mixed[] */
-    private $setUpDependencies;
-
-    /** @var mixed[] */
-    private $testMethods;
-
     /**
      * @param mixed[] $useStatements
      * @param mixed[] $properties
      * @param mixed[] $setUpDependencies
      * @param mixed[] $testMethods
      */
-    public function __construct(
-        array $useStatements,
-        array $properties,
-        array $setUpDependencies,
-        array $testMethods
-    ) {
-        $this->useStatements     = $useStatements;
-        $this->properties        = $properties;
-        $this->setUpDependencies = $setUpDependencies;
-        $this->testMethods       = $testMethods;
-    }
+    public function __construct(private array $useStatements, private array $properties, private array $setUpDependencies, private array $testMethods) {}
 
     /**
      * @return mixed[]
      */
-    public function getUseStatements() : array
+    public function getUseStatements(): array
     {
         return $this->useStatements;
     }
@@ -47,7 +25,7 @@ class TestClassMetadata
     /**
      * @return mixed[]
      */
-    public function getProperties() : array
+    public function getProperties(): array
     {
         return $this->properties;
     }
@@ -55,7 +33,7 @@ class TestClassMetadata
     /**
      * @return mixed[]
      */
-    public function getSetUpDependencies() : array
+    public function getSetUpDependencies(): array
     {
         return $this->setUpDependencies;
     }
@@ -63,7 +41,7 @@ class TestClassMetadata
     /**
      * @return mixed[]
      */
-    public function getTestMethods() : array
+    public function getTestMethods(): array
     {
         return $this->testMethods;
     }

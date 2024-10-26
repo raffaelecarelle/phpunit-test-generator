@@ -6,9 +6,7 @@ namespace JWage\PHPUnitTestGenerator\Configuration;
 
 final class AutoloadingStrategy
 {
-    public const PSR4 = 'psr4';
+    public const string PSR4 = 'psr4';
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 }
