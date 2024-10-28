@@ -27,6 +27,7 @@ class TestClassGeneratorTest extends TestCase
 
         class TestClass1Test extends TestCase
         {
+            /** @var TestDependency&MockObject */
             private TestDependency $testDependency;
 
             private float $testFloatArgument;

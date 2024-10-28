@@ -123,12 +123,17 @@ final class TestClassGenerator
         Class_ $classBuilder,
     ): void {
         foreach ($testClassMetadata->getProperties() as $property) {
+            $propertyStmt = $this->builderFactory->property($property['propertyName'])
+                ->makePrivate()
+                ->setType($property['propertyType']);
+
+            // Generate doc comment if dependency for static analysis
+            if($property['type'] === TestClassMetadataParser::DEPENDENCY) {
+                $propertyStmt->setDocComment($this->generatePropertyDocBlock($property));
+            }
+
             $classBuilder
-                ->addStmt(
-                    $this->builderFactory->property($property['propertyName'])
-                        ->makePrivate()
-                        ->setType($property['propertyType']),
-                )
+                ->addStmt($propertyStmt)
                 ->addStmt(
                     $this->builderFactory->property('__newLineReplace__')
                         ->makePrivate(),
@@ -147,7 +152,7 @@ final class TestClassGenerator
             $docBlockTypes[] = 'MockObject';
         }
 
-        return \sprintf('/** @var %s */', \implode('|', $docBlockTypes));
+        return \sprintf('/** @var %s */', \implode('&', $docBlockTypes));
     }
 
     private function generateTestClassTestMethods(
