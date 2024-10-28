@@ -14,7 +14,7 @@ final class ComposerConfigurationReader
     {
         $this->projectRoot = $path ?? \getcwd();
 
-        $composerJsonPath = $path . '/composer.json';
+        $composerJsonPath = $this->projectRoot . '/composer.json';
 
         if ( ! \file_exists($composerJsonPath)) {
             throw new RuntimeException(
