@@ -285,7 +285,7 @@ final class TestClassMetadataParser
     /**
      * @throws ReflectionException
      */
-    public function getParameterClass(ReflectionParameter $parameter): ?ReflectionClass
+    private function getParameterClass(ReflectionParameter $parameter): ?ReflectionClass
     {
         return $parameter->getType() && ! $parameter->getType()->isBuiltin()
             ? new ReflectionClass($parameter->getType()->getName())
