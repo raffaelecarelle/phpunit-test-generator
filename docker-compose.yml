@@ -10,6 +10,7 @@ services:
         extra_hosts:
             - "host.docker.internal:host-gateway"
         environment:
+            XDEBUG_CONFIG: "idekey=PHPSTORM;mode=develop,debug"
             PHP_IDE_CONFIG: "serverName=PhpUnitGenerator"
             SYMFONY_DEPRECATIONS_HELPER: disabled
         volumes:
