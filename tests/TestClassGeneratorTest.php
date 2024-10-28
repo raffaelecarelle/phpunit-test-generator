@@ -27,23 +27,17 @@ class TestClassGeneratorTest extends TestCase
 
         class TestClass1Test extends TestCase
         {
-            /** @var TestDependency|MockObject */
-            private $testDependency;
+            private TestDependency $testDependency;
 
-            /** @var float */
-            private $testFloatArgument;
+            private float $testFloatArgument;
 
-            /** @var int */
-            private $testIntegerArgument;
+            private int $testIntegerArgument;
 
-            /** @var string */
-            private $testStringArgument;
+            private string $testStringArgument;
 
-            /** @var array */
-            private $testArrayArgument;
+            private array $testArrayArgument;
 
-            /** @var TestClass1 */
-            private $testClass1;
+            private TestClass1 $testClass1;
 
             public function testGetTestDependency(): void
             {
@@ -125,8 +119,7 @@ class TestClassGeneratorTest extends TestCase
 
         class TestClass2Test extends TestCase
         {
-            /** @var TestClass2 */
-            private $testClass2;
+            private TestClass2 $testClass2;
 
             public function testGetSomething(): void
             {

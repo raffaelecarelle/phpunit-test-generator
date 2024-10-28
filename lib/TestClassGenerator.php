@@ -123,16 +123,16 @@ final class TestClassGenerator
         Class_ $classBuilder,
     ): void {
         foreach ($testClassMetadata->getProperties() as $property) {
-            $classBuilder->addStmt(
-                $this->builderFactory->property($property['propertyName'])
-                    ->makePrivate()
-                    ->setDocComment($this->generatePropertyDocBlock($property)),
-            );
-
-            $classBuilder->addStmt(
-                $this->builderFactory->property('__newLineReplace__')
-                    ->makePrivate(),
-            );
+            $classBuilder
+                ->addStmt(
+                    $this->builderFactory->property($property['propertyName'])
+                        ->makePrivate()
+                        ->setType($property['propertyType']),
+                )
+                ->addStmt(
+                    $this->builderFactory->property('__newLineReplace__')
+                        ->makePrivate(),
+                );
         }
     }
 

@@ -8,7 +8,7 @@ use Doctrine\Inflector\Inflector;
 use JWage\PHPUnitTestGenerator\TestClassMetadata;
 use JWage\PHPUnitTestGenerator\TestClassMetadataParser;
 use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass1;
-use PHPUnit\Framework\MockObject\MockObject;
+use Override;
 use PHPUnit\Framework\TestCase;
 
 class TestClassMetadataParserTest extends TestCase
@@ -23,7 +23,7 @@ class TestClassMetadataParserTest extends TestCase
         self::assertInstanceOf(TestClassMetadata::class, $this->testClassMetadataParser->getTestClassMetadata($className));
     }
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         $this->inflector = $this->createMock(Inflector::class);

@@ -60,7 +60,7 @@ final class TestClassMetadataParser
         foreach ($parameters as $parameter) {
             $parameterClass = $this->getParameterClass($parameter);
 
-            if (!$parameterClass instanceof \ReflectionClass) {
+            if ( ! $parameterClass instanceof ReflectionClass) {
                 continue;
             }
 
@@ -75,7 +75,7 @@ final class TestClassMetadataParser
             foreach ($method->getParameters() as $parameter) {
                 $parameterClass = $this->getParameterClass($parameter);
 
-                if (!$parameterClass instanceof \ReflectionClass) {
+                if ( ! $parameterClass instanceof ReflectionClass) {
                     continue;
                 }
 
@@ -116,7 +116,7 @@ final class TestClassMetadataParser
         foreach ($parameters as $parameter) {
             $parameterClass = $this->getParameterClass($parameter);
 
-            if ($parameterClass instanceof \ReflectionClass) {
+            if ($parameterClass instanceof ReflectionClass) {
                 $classProperties[] = [
                     'type' => self::DEPENDENCY,
                     'propertyType' => $parameterClass->getShortName(),
@@ -155,7 +155,7 @@ final class TestClassMetadataParser
         foreach ($parameters as $parameter) {
             $parameterClass = $this->getParameterClass($parameter);
 
-            if ($parameterClass instanceof \ReflectionClass) {
+            if ($parameterClass instanceof ReflectionClass) {
                 $setUpLines[] = [
                     'type' => self::DEPENDENCY,
                     'propertyName' => $parameter->name,
@@ -229,7 +229,7 @@ final class TestClassMetadataParser
         foreach ($parameters as $parameter) {
             $parameterClass = $this->getParameterClass($parameter);
 
-            if ($parameterClass instanceof \ReflectionClass) {
+            if ($parameterClass instanceof ReflectionClass) {
                 $testMethodLines[] = [
                     'type' => self::DEPENDENCY,
                     'variableName' => $parameter->name,
