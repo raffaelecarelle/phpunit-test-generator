@@ -8,6 +8,7 @@ use Doctrine\Inflector\Inflector;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
 
@@ -282,13 +283,11 @@ final class TestClassMetadataParser
     }
 
     /**
-     * @param ReflectionParameter $parameter
-     * @return ReflectionClass|null
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getParameterClass(ReflectionParameter $parameter): ?ReflectionClass
     {
-        return $parameter->getType() && !$parameter->getType()->isBuiltin()
+        return $parameter->getType() && ! $parameter->getType()->isBuiltin()
             ? new ReflectionClass($parameter->getType()->getName())
             : null;
     }
