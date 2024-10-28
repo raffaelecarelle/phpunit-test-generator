@@ -57,7 +57,7 @@ final class TestClassMetadataParser
         $parameters = $this->getConstructorParameters();
 
         foreach ($parameters as $parameter) {
-            $parameterClass = $parameter->getClass();
+            $parameterClass = $this->getParameterClass($parameter);
 
             if ($parameterClass === null) {
                 continue;
@@ -72,7 +72,7 @@ final class TestClassMetadataParser
             }
 
             foreach ($method->getParameters() as $parameter) {
-                $parameterClass = $parameter->getClass();
+                $parameterClass = $this->getParameterClass($parameter);
 
                 if ($parameterClass === null) {
                     continue;
@@ -91,7 +91,7 @@ final class TestClassMetadataParser
                 }
             }
 
-            $useStatements[] = $returnType;
+            $useStatements[] = (string) $returnType;
         }
 
         $useStatements[] = MockObject::class;
@@ -113,7 +113,7 @@ final class TestClassMetadataParser
         $parameters = $this->getConstructorParameters();
 
         foreach ($parameters as $parameter) {
-            $parameterClass = $parameter->getClass();
+            $parameterClass = $this->getParameterClass($parameter);
 
             if ($parameterClass !== null) {
                 $classProperties[] = [
@@ -152,7 +152,7 @@ final class TestClassMetadataParser
         $parameters = $this->getConstructorParameters();
 
         foreach ($parameters as $parameter) {
-            $parameterClass = $parameter->getClass();
+            $parameterClass = $this->getParameterClass($parameter);
 
             if ($parameterClass !== null) {
                 $setUpLines[] = [
@@ -226,7 +226,7 @@ final class TestClassMetadataParser
         $testMethodLines = [];
 
         foreach ($parameters as $parameter) {
-            $parameterClass = $parameter->getClass();
+            $parameterClass = $this->getParameterClass($parameter);
 
             if ($parameterClass !== null) {
                 $testMethodLines[] = [
@@ -279,5 +279,17 @@ final class TestClassMetadataParser
             'string' => '',
             default => '',
         };
+    }
+
+    /**
+     * @param ReflectionParameter $parameter
+     * @return ReflectionClass|null
+     * @throws \ReflectionException
+     */
+    public function getParameterClass(ReflectionParameter $parameter): ?ReflectionClass
+    {
+        return $parameter->getType() && !$parameter->getType()->isBuiltin()
+            ? new ReflectionClass($parameter->getType()->getName())
+            : null;
     }
 }
