@@ -8,10 +8,8 @@ other autoloading strategies and application organizational structures, pull req
 ## Install
 
 ```console
-$ composer require --dev jwage/phpunit-test-generator
+$ composer require --dev raffaelecarelle/phpunit-test-generator
 ```
-
-You can also download the latest PHAR from the [releases](https://github.com/jwage/phpunit-test-generator/releases) page.
 
 ## Generate Test Class
 
