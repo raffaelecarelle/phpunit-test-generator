@@ -30,7 +30,6 @@ jobs:
                 with:
                     php-version: '${{ matrix.php }}'
                     coverage: none
-                    tools: castor
 
             -   name: Install Composer packages
                 uses: ramsey/composer-install@v3
@@ -60,7 +59,7 @@ jobs:
                 uses: ramsey/composer-install@v3
 
             -   name: Run PHP CS Fixer
-                run: ./vendor/bin/php-cs-fixer --no-fix
+                run: ./vendor/bin/php-cs-fixer fix --dry-run
 
     phpstan:
         runs-on: ubuntu-latest
@@ -90,4 +89,4 @@ jobs:
                 uses: ramsey/composer-install@v3
 
             -   name: Run PHPStan
-                run: ./vendor/bin/phpstan --no-local
+                run: ./vendor/bin/phpstan analyze --memory-limit=-1
