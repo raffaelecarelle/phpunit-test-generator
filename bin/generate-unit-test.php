@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator;
+namespace PHPUnitTestGenerator;
 
-use JWage\PHPUnitTestGenerator\Command\GenerateTestClassCommand;
+use PHPUnitTestGenerator\Command\GenerateTestClassCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use const PHP_EOL;

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator;
+namespace PHPUnitTestGenerator;
 
 use Doctrine\Inflector\Inflector;
-use JWage\PHPUnitTestGenerator\Configuration\Configuration;
 use PhpParser\Builder\Class_;
 use PhpParser\Builder\Method;
 use PhpParser\BuilderFactory;
 use PhpParser\Node;
+use PhpParser\Node\DeclareItem;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Declare_;
-use PhpParser\Node\Stmt\DeclareDeclare;
 use PhpParser\Node\Stmt\Nop;
 use PhpParser\PrettyPrinter\Standard;
+use PHPUnitTestGenerator\Configuration\Configuration;
 use ReflectionClass;
 
 final class TestClassGenerator
@@ -30,7 +30,7 @@ final class TestClassGenerator
 
     private ?string $classShortName = null;
 
-    private null | array | string $testNamespace = null;
+    private null | Name | string $testNamespace = null;
 
     private ?string $testClassShortName = null;
 
@@ -44,6 +44,9 @@ final class TestClassGenerator
         $this->builderFactory = new BuilderFactory();
     }
 
+    /**
+     * @param class-string $className
+     */
     public function generate(string $className): GeneratedTestClass
     {
         $this->init($className);
@@ -92,7 +95,7 @@ final class TestClassGenerator
     {
         $nodes = [];
 
-        $nodes[] = new Declare_([new DeclareDeclare('strict_types', $this->builderFactory->val(1))]);
+        $nodes[] = new Declare_([new DeclareItem('strict_types', $this->builderFactory->val(1))]);
 
         $nodes[] = new Nop();
 
@@ -128,7 +131,7 @@ final class TestClassGenerator
                 ->setType($property['propertyType']);
 
             // Generate doc comment if dependency for static analysis
-            if($property['type'] === TestClassMetadataParser::DEPENDENCY) {
+            if ($property['type'] === TestClassMetadataParser::DEPENDENCY) {
                 $propertyStmt->setDocComment($this->generatePropertyDocBlock($property));
             }
 

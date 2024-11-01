@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests;
+namespace PHPUnitTestGenerator\Tests;
 
-use JWage\PHPUnitTestGenerator\TestClassMetadata;
 use Override;
 use PHPUnit\Framework\TestCase;
+use PHPUnitTestGenerator\TestClassMetadata;
 
 class TestClassMetadataTest extends TestCase
 {

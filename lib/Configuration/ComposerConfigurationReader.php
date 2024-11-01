@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Configuration;
+namespace PHPUnitTestGenerator\Configuration;
 
 use RuntimeException;
 
@@ -12,7 +12,7 @@ final class ComposerConfigurationReader
 
     public function createConfiguration(?string $path = null): Configuration
     {
-        $this->projectRoot = $path ?? \getcwd();
+        $this->projectRoot = $path ?? (string) \getcwd();
 
         $composerJsonPath = $this->projectRoot . '/composer.json';
 

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests\Fixture;
+namespace PHPUnitTestGenerator\Tests\Fixture;
 
-use JWage\PHPUnitTestGenerator\Tests\TestDependency;
+use PHPUnitTestGenerator\Tests\TestDependency;
 
 class TestClass1
 {

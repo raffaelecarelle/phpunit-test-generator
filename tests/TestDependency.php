@@ -2,6 +2,6 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests;
+namespace PHPUnitTestGenerator\Tests;
 
 class TestDependency {}

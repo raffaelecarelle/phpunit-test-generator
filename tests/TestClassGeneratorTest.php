@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests;
+namespace PHPUnitTestGenerator\Tests;
 
-use JWage\PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
-use JWage\PHPUnitTestGenerator\TestClassGenerator;
-use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass1;
-use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass2;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
+use PHPUnitTestGenerator\TestClassGenerator;
+use PHPUnitTestGenerator\Tests\Fixture\TestClass1;
+use PHPUnitTestGenerator\Tests\Fixture\TestClass2;
 
 class TestClassGeneratorTest extends TestCase
 {
@@ -18,10 +18,10 @@ class TestClassGeneratorTest extends TestCase
 
         declare (strict_types=1);
 
-        namespace JWage\PHPUnitTestGenerator\Tests\Fixture;
+        namespace PHPUnitTestGenerator\Tests\Fixture;
 
-        use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass1;
-        use JWage\PHPUnitTestGenerator\Tests\TestDependency;
+        use PHPUnitTestGenerator\Tests\Fixture\TestClass1;
+        use PHPUnitTestGenerator\Tests\TestDependency;
         use PHPUnit\Framework\MockObject\MockObject;
         use PHPUnit\Framework\TestCase;
 
@@ -112,9 +112,9 @@ class TestClassGeneratorTest extends TestCase
 
         declare (strict_types=1);
 
-        namespace JWage\PHPUnitTestGenerator\Tests\Fixture;
+        namespace PHPUnitTestGenerator\Tests\Fixture;
 
-        use JWage\PHPUnitTestGenerator\Tests\Fixture\TestClass2;
+        use PHPUnitTestGenerator\Tests\Fixture\TestClass2;
         use PHPUnit\Framework\MockObject\MockObject;
         use PHPUnit\Framework\TestCase;
 
@@ -135,6 +135,9 @@ class TestClassGeneratorTest extends TestCase
 
         EOF;
 
+    /**
+     * @param class-string $class
+     */
     #[DataProvider('getTestClasses')]
     public function testGenerate(string $class, string $expected): void
     {

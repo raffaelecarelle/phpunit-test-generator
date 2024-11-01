@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests\Writer;
+namespace PHPUnitTestGenerator\Tests\Writer;
 
-use JWage\PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
-use JWage\PHPUnitTestGenerator\Configuration\Configuration;
-use JWage\PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
-use JWage\PHPUnitTestGenerator\GeneratedTestClass;
-use JWage\PHPUnitTestGenerator\Writer\Psr4TestClassWriter;
 use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
+use PHPUnitTestGenerator\Configuration\Configuration;
+use PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
+use PHPUnitTestGenerator\GeneratedTestClass;
+use PHPUnitTestGenerator\Writer\Psr4TestClassWriter;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 

@@ -3,6 +3,6 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator;
+namespace PHPUnitTestGenerator;
 
 require __DIR__ . '/generate-unit-test.php';

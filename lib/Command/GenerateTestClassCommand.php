@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Command;
+namespace PHPUnitTestGenerator\Command;
 
 use InvalidArgumentException;
-use JWage\PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
-use JWage\PHPUnitTestGenerator\Configuration\ComposerConfigurationReader;
-use JWage\PHPUnitTestGenerator\Configuration\Configuration;
-use JWage\PHPUnitTestGenerator\TestClassGenerator;
-use JWage\PHPUnitTestGenerator\Writer\Psr0TestClassWriter;
-use JWage\PHPUnitTestGenerator\Writer\Psr4TestClassWriter;
-use JWage\PHPUnitTestGenerator\Writer\TestClassWriter;
 use Override;
+use PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
+use PHPUnitTestGenerator\Configuration\ComposerConfigurationReader;
+use PHPUnitTestGenerator\Configuration\Configuration;
+use PHPUnitTestGenerator\TestClassGenerator;
+use PHPUnitTestGenerator\Writer\Psr0TestClassWriter;
+use PHPUnitTestGenerator\Writer\Psr4TestClassWriter;
+use PHPUnitTestGenerator\Writer\TestClassWriter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

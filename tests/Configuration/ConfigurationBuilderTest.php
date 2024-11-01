@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests\Configuration;
+namespace PHPUnitTestGenerator\Tests\Configuration;
 
-use JWage\PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
-use JWage\PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
 use Override;
 use PHPUnit\Framework\TestCase;
+use PHPUnitTestGenerator\Configuration\AutoloadingStrategy;
+use PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
 
 class ConfigurationBuilderTest extends TestCase
 {

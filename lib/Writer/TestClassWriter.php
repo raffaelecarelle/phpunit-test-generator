@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Writer;
+namespace PHPUnitTestGenerator\Writer;
 
-use JWage\PHPUnitTestGenerator\GeneratedTestClass;
+use PHPUnitTestGenerator\GeneratedTestClass;
 
 interface TestClassWriter
 {

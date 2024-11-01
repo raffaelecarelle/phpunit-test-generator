@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator;
+namespace PHPUnitTestGenerator;
 
 use Doctrine\Inflector\Inflector;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -11,6 +11,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionParameter;
+use ReflectionType;
 
 final class TestClassMetadataParser
 {
@@ -284,11 +285,15 @@ final class TestClassMetadataParser
 
     /**
      * @throws ReflectionException
+     * @return ?ReflectionClass<object>
      */
     private function getParameterClass(ReflectionParameter $parameter): ?ReflectionClass
     {
-        return $parameter->getType() && ! $parameter->getType()->isBuiltin()
-            ? new ReflectionClass($parameter->getType()->getName())
+        /** @var class-string $classString */
+        $classString = (string) $parameter->getType();
+
+        return $parameter->getType() instanceof ReflectionType && ! $parameter->getType()->isBuiltin()
+            ? new ReflectionClass($classString)
             : null;
     }
 }

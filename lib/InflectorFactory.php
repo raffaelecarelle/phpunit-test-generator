@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator;
+namespace PHPUnitTestGenerator;
 
 use Doctrine\Inflector\CachedWordInflector;
 use Doctrine\Inflector\Inflector;

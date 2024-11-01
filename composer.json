@@ -1,5 +1,5 @@
 {
-    "name": "jwage/phpunit-test-generator",
+    "name": "raffaelecarelle/phpunit-test-generator",
     "description": "Generate PHPUnit test classes for a PHP class.",
     "type": "library",
     "license": "MIT",
@@ -7,6 +7,10 @@
         {
             "name": "Jonathan H. Wage",
             "email": "jonwage@gmail.com"
+        },
+        {
+            "name": "Raffaele Carelle",
+            "email": "raffaele.carelle@gmail.com"
         }
     ],
     "require": {
@@ -28,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "JWage\\PHPUnitTestGenerator\\": "lib/"
+            "PHPUnitTestGenerator\\": "lib/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JWage\\PHPUnitTestGenerator\\Tests\\": "tests/"
+            "PHPUnitTestGenerator\\Tests\\": "tests/"
         }
     },
     "config": {

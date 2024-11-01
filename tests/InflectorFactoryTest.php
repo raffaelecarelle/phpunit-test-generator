@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Tests;
+namespace PHPUnitTestGenerator\Tests;
 
-use JWage\PHPUnitTestGenerator\InflectorFactory;
 use PHPUnit\Framework\TestCase;
+use PHPUnitTestGenerator\InflectorFactory;
 
 class InflectorFactoryTest extends TestCase
 {

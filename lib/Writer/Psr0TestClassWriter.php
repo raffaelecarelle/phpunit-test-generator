@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JWage\PHPUnitTestGenerator\Writer;
+namespace PHPUnitTestGenerator\Writer;
 
-use JWage\PHPUnitTestGenerator\Configuration\Configuration;
-use JWage\PHPUnitTestGenerator\GeneratedTestClass;
 use Override;
+use PHPUnitTestGenerator\Configuration\Configuration;
+use PHPUnitTestGenerator\GeneratedTestClass;
 use RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 
