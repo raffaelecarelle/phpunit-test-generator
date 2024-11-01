@@ -1,2 +1,36 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$className of method PHPUnitTestGenerator\\\\TestClassGenerator\\:\\:generate\\(\\) expects class\\-string, string given\\.$#"
+			count: 1
+			path: lib/Command/GenerateTestClassCommand.php
+
+		-
+			message: "#^Property PHPUnitTestGenerator\\\\TestClassGenerator\\:\\:\\$reflectionClass with generic class ReflectionClass does not specify its types\\: T$#"
+			count: 1
+			path: lib/TestClassGenerator.php
+
+		-
+			message: "#^Call to an undefined method ReflectionType\\:\\:getName\\(\\)\\.$#"
+			count: 2
+			path: lib/TestClassMetadataParser.php
+
+		-
+			message: "#^Call to an undefined method ReflectionType\\:\\:isBuiltin\\(\\)\\.$#"
+			count: 1
+			path: lib/TestClassMetadataParser.php
+
+		-
+			message: "#^Method PHPUnitTestGenerator\\\\TestClassMetadataParser\\:\\:generateTypeRandomValue\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: lib/TestClassMetadataParser.php
+
+		-
+			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, string given\\.$#"
+			count: 1
+			path: lib/TestClassMetadataParser.php
+
+		-
+			message: "#^Property PHPUnitTestGenerator\\\\TestClassMetadataParser\\:\\:\\$reflectionClass with generic class ReflectionClass does not specify its types\\: T$#"
+			count: 1
+			path: lib/TestClassMetadataParser.php
