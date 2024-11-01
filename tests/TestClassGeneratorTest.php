@@ -10,6 +10,7 @@ use PHPUnitTestGenerator\Configuration\ConfigurationBuilder;
 use PHPUnitTestGenerator\TestClassGenerator;
 use PHPUnitTestGenerator\Tests\Fixture\TestClass1;
 use PHPUnitTestGenerator\Tests\Fixture\TestClass2;
+use PHPUnitTestGenerator\Tests\Fixture\TestClass3;
 
 class TestClassGeneratorTest extends TestCase
 {
@@ -114,7 +115,7 @@ class TestClassGeneratorTest extends TestCase
 
         namespace PHPUnitTestGenerator\Tests\Fixture;
 
-        use PHPUnitTestGenerator\Tests\Fixture\TestClass2;
+        use PHPUnitTestGenerator\Tests\Fixture\TestClass3;
         use PHPUnit\Framework\MockObject\MockObject;
         use PHPUnit\Framework\TestCase;
 
@@ -130,6 +131,45 @@ class TestClassGeneratorTest extends TestCase
             protected function setUp(): void
             {
                 $this->testClass2 = new TestClass2();
+            }
+        }
+
+        EOF;
+
+    private const string EXPECTED_TEST_CLASS3 = <<<'EOF'
+        <?php
+
+        declare (strict_types=1);
+
+        namespace PHPUnitTestGenerator\Tests\Fixture;
+
+        use PHPUnitTestGenerator\Tests\Fixture\TestClass3;
+        use PHPUnit\Framework\MockObject\MockObject;
+        use PHPUnit\Framework\TestCase;
+
+        class TestClass3Test extends TestCase
+        {
+            private TestClass3 $testClass3;
+            private string $name;
+            private int $age;
+
+            public function testGetSomething(): void
+            {
+                self::assertSame('', $this->testClass3->getSomething());
+            }
+
+            public function testSetSomething(): void
+            {
+                $someThing = '';
+                self::assertNull($this->testClass3->setSomething($someThing));
+            }
+
+            #[\Override]
+            protected function setUp(): void
+            {
+                $this->name = '';
+                $this->age = 1;
+                $this->testClass3 = new TestClass3($this->name, $this->age);
             }
         }
 
@@ -151,6 +191,22 @@ class TestClassGeneratorTest extends TestCase
     }
 
     /**
+     * @param class-string $class
+     */
+    #[DataProvider('getExistingTestClasses')]
+    public function testGenerateWithExistingCLass(string $class, string $expected): void
+    {
+        $configuration = (new ConfigurationBuilder())->build();
+
+        $testClassGenerator = new TestClassGenerator($configuration);
+
+        $generatedTestClass = $testClassGenerator->generate($class);
+
+        self::assertSame($expected, $generatedTestClass->getCode());
+    }
+
+
+    /**
      * @return string[][]
      */
     public static function getTestClasses(): array
@@ -158,6 +214,16 @@ class TestClassGeneratorTest extends TestCase
         return [
             [TestClass1::class, self::EXPECTED_TEST_CLASS1],
             [TestClass2::class, self::EXPECTED_TEST_CLASS2],
+        ];
+    }
+
+    /**
+     * @return string[][]
+     */
+    public static function getExistingTestClasses(): array
+    {
+        return [
+            [TestClass3::class, self::EXPECTED_TEST_CLASS3],
         ];
     }
 }

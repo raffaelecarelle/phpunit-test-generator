@@ -7,6 +7,8 @@ namespace PHPUnitTestGenerator;
 use Doctrine\Inflector\Inflector;
 use PhpParser\Builder\Class_;
 use PhpParser\Builder\Method;
+use PhpParser\Builder\Namespace_;
+use PhpParser\Builder\Use_;
 use PhpParser\BuilderFactory;
 use PhpParser\Node;
 use PhpParser\Node\DeclareItem;
@@ -16,6 +18,10 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\Declare_;
 use PhpParser\Node\Stmt\Nop;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
+use PhpParser\NodeVisitorAbstract;
+use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnitTestGenerator\Configuration\Configuration;
 use ReflectionClass;
@@ -110,6 +116,28 @@ final class TestClassGenerator
         $classBuilder = $this->builderFactory->class($this->testClassShortName)
             ->extend('TestCase');
 
+        $stmts = [];
+
+        if(class_exists($this->testClassName)) {
+            $parser = (new ParserFactory())->createForHostVersion();
+            $ref = new ReflectionClass($this->testClassName);
+            $stmts = $parser->parse(file_get_contents($ref->getFileName()));
+
+            $traverser = new NodeTraverser();
+            $traverser->addVisitor(new class extends NodeVisitorAbstract {
+                public function leaveNode(Node $node) {
+                    if (
+                        $node instanceof Declare_
+                        || $node instanceof Node\Stmt\Use_
+                    ) {
+                        return NodeVisitor::REMOVE_NODE;
+                    }
+                }
+            });
+            $stmts = $traverser->traverse($stmts);
+            $classBuilder->addStmts($stmts[0]->stmts[0]->stmts);
+        }
+
         $this->generateTestClassProperties($testClassMetadata, $classBuilder);
         $this->generateTestClassTestMethods($testClassMetadata, $classBuilder);
         $this->generateTestClassSetUpMethod($testClassMetadata, $classBuilder);
@@ -126,6 +154,7 @@ final class TestClassGenerator
         Class_ $classBuilder,
     ): void {
         foreach ($testClassMetadata->getProperties() as $property) {
+
             $propertyStmt = $this->builderFactory->property($property['propertyName'])
                 ->makePrivate()
                 ->setType($property['propertyType']);
@@ -135,12 +164,22 @@ final class TestClassGenerator
                 $propertyStmt->setDocComment($this->generatePropertyDocBlock($property));
             }
 
-            $classBuilder
-                ->addStmt($propertyStmt)
-                ->addStmt(
-                    $this->builderFactory->property('__newLineReplace__')
-                        ->makePrivate(),
-                );
+            $hasProperty = false;
+            foreach ($classBuilder->getNode()->getProperties() as $p) {
+                if($p->props[0]->name->name === $property['propertyName']) {
+                    $hasProperty = true;
+                    break;
+                }
+            }
+
+            if(! $hasProperty) {
+                $classBuilder
+                    ->addStmt($propertyStmt)
+                    ->addStmt(
+                        $this->builderFactory->property('__newLineReplace__')
+                            ->makePrivate(),
+                    );
+            }
         }
     }
 
@@ -171,9 +210,19 @@ final class TestClassGenerator
                 $this->generateTestClassMethodLine($methodBuilder, $line);
             }
 
-            $classBuilder->addStmt($methodBuilder);
+            $hasMethod = false;
+            foreach ($classBuilder->getNode()->getMethods() as $m) {
+                if($m->name->name === $testMethod['methodName']) {
+                    $hasMethod = true;
+                    break;
+                }
+            }
 
-            $classBuilder->addStmt($this->builderFactory->method('__newLineReplace__'));
+            if(! $hasMethod) {
+                $classBuilder->addStmt($methodBuilder);
+
+                $classBuilder->addStmt($this->builderFactory->method('__newLineReplace__'));
+            }
         }
     }
 
